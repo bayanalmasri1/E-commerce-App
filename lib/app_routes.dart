@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:ecommerceapp/views/auth/forget_screen.dart';
 import 'package:ecommerceapp/views/home/Properties_screen.dart';
 import 'package:ecommerceapp/views/home/add_screen.dart';
 import 'package:ecommerceapp/views/home/home_screen.dart';
@@ -23,6 +24,7 @@ class Routes {
   static const Add = '/add';
   static const verifi= '/verifi';
   static const Properties= '/Properties';
+  static const forget= '/ForgotPassword';
 }
 
 class AppRoutes {
@@ -35,6 +37,7 @@ class AppRoutes {
     GetPage(name: Routes.setting, page: ()=> AccountSettingsScreen()),
     GetPage(name: Routes.Add, page: ()=> AddListingScreen()),
     GetPage(name: Routes.verifi, page: ()=> VerificationScreen()),
-    GetPage(name: Routes.Properties, page: ()=> const PropertiesPage())
+    GetPage(name: Routes.Properties, page: ()=> const PropertiesPage()),
+    GetPage(name: Routes.forget, page: ()=>  ForgotPasswordPage())
   ];
 }

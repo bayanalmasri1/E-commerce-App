@@ -1,3 +1,4 @@
+import 'package:ecommerceapp/views/detailies/ad_details_screen.dart';
 import 'package:ecommerceapp/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -50,46 +51,53 @@ class _ListingsScreenState extends State<ListingsScreen> {
     );
   }
 
-  Widget _buildListingCard(Map<String, dynamic> listing, int index) {
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            // اسم الإعلان + السنة + السعر
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    listing['name'],
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Year: ${listing['year']}',
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Price: \$${listing['price']}',
-                    style: const TextStyle(fontSize: 16, color: Colors.teal),
-                  ),
-                ],
+    Widget _buildListingCard(Map<String, dynamic> listing, int index) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ListingDetailsScreen(listing: listing),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 3,
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      listing['name'],
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Year: ${listing['year']}',
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Price: \$${listing['price']}',
+                      style: const TextStyle(fontSize: 16, color: Colors.teal),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            // زر الحذف
-            IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _deleteListing(index),
-            ),
-          ],
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () => _deleteListing(index),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-

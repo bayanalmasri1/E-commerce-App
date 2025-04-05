@@ -1,4 +1,4 @@
-import 'package:ecommerceapp/controller/auth_controller.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +8,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final AuthController authController = Get.put(AuthController());
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -161,9 +160,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 20),
 
                 // ✅ زر التسجيل
-                Obx(() => authController.isLoading.value
+               /* Obx(() => authController.isLoading.value
                     ? const CircularProgressIndicator()
-                    : ElevatedButton(
+                    : */ ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             // ✅ الحقول صحيحة - تابع التسجيل
@@ -182,7 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           "Register",
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
-                      )),
+                      ),
                 const SizedBox(height: 20),
 
                 // ✅ تسجيل الدخول
@@ -207,12 +206,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(fontSize: 18, color: Colors.teal),
                   ),
                 ),
-              ],
-            ),
+              
+            ]),
           ),
         ),
-      ),
-    );
+      
+    ));
   }
 }
 
