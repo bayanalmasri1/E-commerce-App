@@ -1,32 +1,46 @@
 import 'package:ecommerceapp/api/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class VerifyOtpPage extends StatefulWidget {
+  const VerifyOtpPage({super.key});
+
   @override
   _VerifyOtpPageState createState() => _VerifyOtpPageState();
 }
 
 class _VerifyOtpPageState extends State<VerifyOtpPage> {
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
-
   final ApiService _apiService = ApiService();
+  bool _isLoading = false;
+  late String email; // متغير لتخزين الإيميل
+
+  @override
+  void initState() {
+    super.initState();
+    // الحصول على الإيميل من Get.arguments
+    email = Get.arguments['email'];
+  }
 
   Future<void> _verifyOtp() async {
+    setState(() => _isLoading = true);
+
     bool isVerified = await _apiService.verifyOtp(
-      _emailController.text,
-      _otpController.text,
+      email: email, // استخدام الإيميل هنا
+      otp: _otpController.text,
     );
 
+    setState(() => _isLoading = false);
+
     if (isVerified) {
-      // تم التحقق بنجاح
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("OTP verified successfully")),
+        const SnackBar(content: Text("✅ OTP verified successfully")),
       );
+      // الانتقال إلى الصفحة المطلوبة بعد التحقق
+      Navigator.pushReplacementNamed(context, '/login');
     } else {
-      // فشل التحقق
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to verify OTP")),
+        const SnackBar(content: Text("❌ Failed to verify OTP")),
       );
     }
   }
@@ -34,23 +48,27 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Verify OTP")),
+      appBar: AppBar(title: const Text("Verify OTP")),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: "Email"),
-            ),
+            Text("A verification code was sent to $email"),
+            const SizedBox(height: 16),
             TextField(
               controller: _otpController,
-              decoration: InputDecoration(labelText: "OTP"),
+              decoration: const InputDecoration(labelText: "Enter OTP"),
+              keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _verifyOtp,
-              child: Text("Verify OTP"),
+            const SizedBox(height: 20),
+            Center(
+              child: _isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: _verifyOtp,
+                      child: const Text("Verify"),
+                    ),
             ),
           ],
         ),

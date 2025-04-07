@@ -16,36 +16,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   bool isCompany = false;
   bool _isLoading = false;
+  bool _obscureText = true;  // تعريف المتغير هنا
 
   final ApiService _apiService = ApiService();
 
-  Future<bool> _register() async {
-    setState(() {
-      _isLoading = true;
-    });
+  Future<void> _register() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
 
-    bool isRegistered = await _apiService.registerUser(
-      _usernameController.text,
-      _emailController.text,
-      _passwordController.text,
-      _confirmPassword.text,
-      isCompany,
-    );
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    if (isRegistered) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("User registered successfully")),
+      bool isRegistered = await _apiService.registerUser(
+        _usernameController.text,
+        _emailController.text,
+        _passwordController.text,
+        _confirmPassword.text,
+        isCompany,
       );
-      return true;
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Failed to register")),
-      );
-      return false;
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (isRegistered) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("User registered successfully")),
+        );
+        Get.toNamed('/verifi', arguments: {'email': _emailController.text});
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to register. Please try again.")),
+        );
+      }
     }
   }
 
@@ -78,6 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
                 const SizedBox(height: 40),
+                // بقية الحقول هنا كما هي
                 TextFormField(
                   controller: _usernameController,
                   decoration: const InputDecoration(
@@ -114,12 +117,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
+                  obscureText: _obscureText,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     labelText: "Password",
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -133,12 +147,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _confirmPassword,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
+                  obscureText: _obscureText, // نفس المتغير هنا
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     labelText: "Confirm Password",
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -182,14 +207,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 _isLoading
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            bool success = await _register();
-                            if (success) {
-                              Get.toNamed('/verifi');
-                            }
-                          }
-                        },
+                        onPressed: _register,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.teal,
                           padding: const EdgeInsets.symmetric(
@@ -247,27 +265,34 @@ Widget _buildAccountTypeButton({
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.teal[50] : Colors.grey[200],
+          color: isSelected ? Colors.teal : Colors.white,
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected ? Colors.teal : Colors.grey,
-            width: 1.5,
+            width: 2,
           ),
-          borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              size: 30,
-              color: isSelected ? Colors.teal : Colors.black,
-            ),
+            Icon(icon,
+                size: 30, color: isSelected ? Colors.white : Colors.teal),
+            const SizedBox(height: 8),
             Text(
               title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 16,
+                color: isSelected ? Colors.white : Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            const SizedBox(height: 4),
             Text(
               subtitle,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: isSelected ? Colors.white70 : Colors.grey[700],
+              ),
             ),
           ],
         ),

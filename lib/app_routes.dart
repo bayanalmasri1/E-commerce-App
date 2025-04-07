@@ -36,7 +36,7 @@ class AppRoutes {
     GetPage(name: Routes.REGISTER, page: () => RegisterScreen()),
     GetPage(name: Routes.setting, page: ()=> AccountSettingsScreen()),
     GetPage(name: Routes.Add, page: ()=> AddListingScreen()),
-    GetPage(name: Routes.verifi, page: ()=> VerifyOtpPage()),
+    GetPage(name: Routes.verifi, page: ()=>  VerifyOtpPage()),
     GetPage(name: Routes.Properties, page: ()=> const PropertiesPage()),
     GetPage(name: Routes.forget, page: ()=>  ForgotPasswordPage())
   ];

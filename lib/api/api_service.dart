@@ -8,7 +8,7 @@ class ApiService {
 
   // التابع الذي يعالج التسجيل
  Future<bool> registerUser(String username, String email, String password, String confirmPassword, bool isCompany) async {
-  final Uri url = Uri.parse('https://wowsyria.com/account/register');
+  final Uri url = Uri.parse('$baseUrl/account/register');
 
   final response = await http.post(
     url,
@@ -31,8 +31,7 @@ class ApiService {
 }
 
 
-  // التابع الذي يعالج التحقق من OTP
-  Future<bool> verifyOtp(String email, String otp) async {
+  Future<bool> verifyOtp({required String email, required String otp}) async {
     final response = await http.post(
       Uri.parse('$baseUrl/account/verify-otp/'),
       body: {
@@ -47,6 +46,8 @@ class ApiService {
       return false;
     }
   }
+
+
 
   // التابع الذي يعالج تسجيل الدخول
  Future<bool> loginUser(String email, String password) async {
