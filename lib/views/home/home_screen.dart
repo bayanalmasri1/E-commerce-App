@@ -1,4 +1,4 @@
-import 'package:ecommerceapp/widgets/car_properties.dart';
+import 'package:ecommerceapp/widgets/properties_sheet.dart';
 import 'package:ecommerceapp/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';

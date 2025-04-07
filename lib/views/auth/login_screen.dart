@@ -1,3 +1,4 @@
+import 'package:ecommerceapp/api/api_service.dart';
 import 'package:ecommerceapp/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,10 +9,32 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  bool _obscureText = true;
+    final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+    bool _obscureText = true;
+
+  final ApiService _apiService = ApiService();
+
+  Future<void> _login() async {
+  bool isLoggedIn = await _apiService.loginUser(
+    _emailController.text,
+    _passwordController.text,
+  );
+
+  if (isLoggedIn) {
+    // تم تسجيل الدخول بنجاح
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Login successful")),
+    );
+    Get.offNamed(Routes.Main); // ← الانتقال يتم هنا فقط بعد النجاح
+  } else {
+    // فشل تسجيل الدخول
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Failed to login")),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 TextFormField(
-                  controller: emailController,
+                  controller: _emailController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -58,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  controller: passwordController,
+                  controller: _passwordController,
                   obscureText: _obscureText,
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(
@@ -100,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Get.offNamed(Routes.Main);
+                      _login();
                     }
                   },
                   style: ElevatedButton.styleFrom(

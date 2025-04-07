@@ -1,25 +1,31 @@
 class ProductModel {
-  final int id;
   final String title;
-  final String description;
-  final String image;
-  final int price;
+  final int bedrooms;
+  final int bathrooms;
+  final int area;
+  final String location;
+  final String price;
+  final String status;
 
   ProductModel({
-    required this.id,
     required this.title,
-    required this.description,
-    required this.image,
+    required this.bedrooms,
+    required this.bathrooms,
+    required this.area,
+    required this.location,
     required this.price,
+    required this.status,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      id: json['id'],
       title: json['title'] ?? '',
-      description: json['description'] ?? '',
-      image: json['image'] ?? '',
-      price: json['price'],
+      bedrooms: json['bedrooms'] ?? 0,
+      bathrooms: json['bathrooms'] ?? 0,
+      area: json['area'] ?? 0,
+      location: json['location'] ?? '',
+      price: json['price'] ?? '',
+      status: json['status'] ?? '',
     );
   }
 }

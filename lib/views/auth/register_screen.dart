@@ -1,22 +1,53 @@
-
+import 'package:ecommerceapp/api/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
 
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-
-  final _formKey = GlobalKey<FormState>(); // 🔑 مفتاح الـ Form
-
+  final _formKey = GlobalKey<FormState>();
   bool isCompany = false;
+  bool _isLoading = false;
+
+  final ApiService _apiService = ApiService();
+
+  Future<bool> _register() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    bool isRegistered = await _apiService.registerUser(
+      _usernameController.text,
+      _emailController.text,
+      _passwordController.text,
+      _confirmPassword.text,
+      isCompany,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (isRegistered) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("User registered successfully")),
+      );
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to register")),
+      );
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
         child: SingleChildScrollView(
           child: Form(
-            key: _formKey, // 🔥 ربط الـ Form بالمفتاح
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -47,10 +78,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
                 const SizedBox(height: 40),
-
-                // ✅ اسم المستخدم
                 TextFormField(
-                  controller: usernameController,
+                  controller: _usernameController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -64,11 +93,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 17),
-
-                // ✅ البريد الإلكتروني
+                const SizedBox(height: 16),
                 TextFormField(
-                  controller: emailController,
+                  controller: _emailController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -84,11 +111,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 17),
-
-                // ✅ كلمة المرور
+                const SizedBox(height: 16),
                 TextFormField(
-                  controller: passwordController,
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
@@ -105,11 +130,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 17),
-
-                // ✅ تأكيد كلمة المرور
+                const SizedBox(height: 16),
                 TextFormField(
-                  controller: confirmPasswordController,
+                  controller: _confirmPassword,
                   obscureText: true,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
@@ -120,15 +143,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Please confirm your password";
-                    } else if (value != passwordController.text) {
+                    } else if (value != _passwordController.text) {
                       return "Passwords do not match";
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 20),
-
-                // ✅ اختيار نوع الحساب
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -158,15 +179,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-
-                // ✅ زر التسجيل
-               /* Obx(() => authController.isLoading.value
+                _isLoading
                     ? const CircularProgressIndicator()
-                    : */ ElevatedButton(
-                        onPressed: () {
+                    : ElevatedButton(
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            // ✅ الحقول صحيحة - تابع التسجيل
-                            Get.toNamed('/verifi');
+                            bool success = await _register();
+                            if (success) {
+                              Get.toNamed('/verifi');
+                            }
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -183,8 +204,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                 const SizedBox(height: 20),
-
-                // ✅ تسجيل الدخول
                 const Text(
                   "Already have an account?",
                   style: TextStyle(color: Colors.grey),
@@ -206,12 +225,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(fontSize: 18, color: Colors.teal),
                   ),
                 ),
-              
-            ]),
+              ],
+            ),
           ),
         ),
-      
-    ));
+      ),
+    );
   }
 }
 
