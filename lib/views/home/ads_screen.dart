@@ -1,4 +1,4 @@
-import 'package:ecommerceapp/views/detailies/ad_details_screen.dart';
+import 'package:ecommerceapp/views/Thaird/ad_details_screen.dart';
 import 'package:ecommerceapp/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 

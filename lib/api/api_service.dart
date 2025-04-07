@@ -4,7 +4,7 @@ import 'dart:convert';
 class ApiService {
   final String baseUrl;
 
-  ApiService({this.baseUrl = 'https://wowsyria.com/'});
+  ApiService({this.baseUrl = 'https://wowsyria.com'});
 
   // التابع الذي يعالج التسجيل
  Future<bool> registerUser(String username, String email, String password, String confirmPassword, bool isCompany) async {
@@ -49,35 +49,26 @@ class ApiService {
   }
 
   // التابع الذي يعالج تسجيل الدخول
-  Future<bool> loginUser(String email, String password) async {
+ Future<bool> loginUser(String email, String password) async {
+  try {
     final response = await http.post(
       Uri.parse('$baseUrl/account/login/'),
-      body: {
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
         'email': email,
         'password': password,
-      },
+      }),
     );
 
     if (response.statusCode == 200) {
       return true;
     } else {
+      print('Login failed: ${response.body}');
       return false;
     }
+  } catch (e) {
+    print('Exception during login: $e');
+    return false;
   }
-
-  // التابع الذي يعالج إعادة إرسال OTP
-  Future<bool> resendOtp(String email) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/account/resend-otp/'),
-      body: {
-        'email': email,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+}
 }

@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:ecommerceapp/views/auth/forget_screen.dart';
-import 'package:ecommerceapp/views/home/Properties_screen.dart';
+import 'package:ecommerceapp/views/Seconed/Properties_screen.dart';
 import 'package:ecommerceapp/views/home/add_screen.dart';
 import 'package:ecommerceapp/views/home/home_screen.dart';
 import 'package:ecommerceapp/views/auth/login_screen.dart';

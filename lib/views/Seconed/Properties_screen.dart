@@ -1,6 +1,6 @@
 import 'package:ecommerceapp/api/proptaty_api.dart';
 import 'package:ecommerceapp/model/product_model.dart';
-import 'package:ecommerceapp/views/detailies/PropertyDetailsPage.dart';
+import 'package:ecommerceapp/views/Thaird/PropertyDetailsPage.dart';
 import 'package:flutter/material.dart';
 
 
